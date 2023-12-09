@@ -9,6 +9,9 @@ import (
 	"net/http"
 )
 
+type ScopeBodyRequest struct {
+	Body string `json:"body"`
+}
 type ScopeResponse struct {
 	Code     int    `json:"code"`
 	Response string `json:"response"`
@@ -28,18 +31,20 @@ type RequestPath struct {
 }
 
 type EtxRestClient struct {
-	BaseURL    string
-	Method     string
-	PathParams RequestPath
-	httpclient *http.Client
+	BaseURL     string
+	Method      string
+	PathParams  RequestPath
+	RequestBody ScopeBodyRequest
+	httpclient  *http.Client
 }
 
-func NewClient(baseURL string, method string, pathParams RequestPath) *EtxRestClient {
+func NewClient(baseURL string, method string, pathParams RequestPath, requestBody ScopeBodyRequest) *EtxRestClient {
 	return &EtxRestClient{
-		BaseURL:    baseURL,
-		Method:     method,
-		PathParams: pathParams,
-		httpclient: &http.Client{},
+		BaseURL:     baseURL,
+		Method:      method,
+		PathParams:  pathParams,
+		RequestBody: requestBody,
+		httpclient:  &http.Client{},
 	}
 }
 
@@ -52,7 +57,7 @@ func (c *EtxRestClient) doRequest(headers map[string]string, body io.Reader) (*h
 
 	}
 
-	pprms := c.BaseURL + "/" + c.PathParams.Command + "/" + buf.String()
+	pprms := c.BaseURL + "/" + c.PathParams.Command
 	log.Println("Calling resource: " + pprms)
 	req, err := http.NewRequest(c.Method, pprms, body)
 	if err != nil {
@@ -87,13 +92,17 @@ func (c *EtxRestClient) encodeJSON(v interface{}) (io.Reader, error) {
 }
 
 func (c *EtxRestClient) GetPost() (*ScopeResponse, error) {
-	resp, err := c.doRequest(nil, nil)
+	body, err := c.encodeJSON(c.RequestBody)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := c.doRequest(nil, body)
 	if err != nil {
 		return nil, err
 	}
 
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("error fetching post: %s", resp.Status)
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusAccepted {
+		return nil, fmt.Errorf("error fetching request: %s", resp.Status)
 	}
 
 	var post ScopeResponse

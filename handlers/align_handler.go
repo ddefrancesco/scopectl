@@ -2,6 +2,7 @@ package handlers
 
 import (
 	etxClient "github.com/ddefrancesco/scopectl/restclient"
+	"github.com/spf13/viper"
 )
 
 func AlignCommandHandler(pmap map[string]string) (*etxClient.ScopeResponse, error) {
@@ -11,7 +12,12 @@ func AlignCommandHandler(pmap map[string]string) (*etxClient.ScopeResponse, erro
 		Items:   pmap,
 	}
 
-	client := etxClient.NewClient("http://localhost:8000", "POST", *etxRequestPath)
+	var bodyRequest = &etxClient.ScopeBodyRequest{
+		Body: pmap["mode"],
+	}
+	var httpUrl string = viper.GetString("environments.test.url")
+	var httpPort string = viper.GetString("environments.test.port")
+	client := etxClient.NewClient(httpUrl+":"+httpPort, "POST", *etxRequestPath, *bodyRequest)
 
 	scopeResponse, err := client.GetPost()
 	if err != nil {

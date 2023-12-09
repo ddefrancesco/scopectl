@@ -1,0 +1,4 @@
+environments:
+  test:
+    url: http://localhost
+    port: 8000

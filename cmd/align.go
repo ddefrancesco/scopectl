@@ -22,7 +22,7 @@ var alignCmd = &cobra.Command{
 	
 	Usage: scopectl align --mode [mode]`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		//fmt.Println("align called")
+
 		log.Println("align called")
 		mode, err := cmd.Flags().GetString("mode")
 		if err != nil {
@@ -48,6 +48,7 @@ var alignCmd = &cobra.Command{
 }
 
 func init() {
+
 	alignCmd.Flags().StringP("mode", "m", "", "align mode")
 	rootCmd.AddCommand(alignCmd)
 
