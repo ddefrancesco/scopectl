@@ -5,25 +5,22 @@ import (
 	"github.com/spf13/viper"
 )
 
-func AlignCommandHandler(pmap map[string]string) (*etxClient.ScopeResponse, error) {
+func AckCommandHandler() (*etxClient.ScopeResponse, error) {
 
 	var etxRequestPath = &etxClient.RequestPath{
-		Command: "align",
-		Items:   pmap,
+		Command: "ack",
+		Items:   nil,
 	}
 
 	var bodyRequest = &etxClient.ScopeBodyRequest{
-		Body: pmap["mode"],
+		Body: "",
 	}
 	var httpUrl string = viper.GetString("environments.test.url")
 	var httpPort string = viper.GetString("environments.test.port")
-	client := etxClient.NewClient(httpUrl+":"+httpPort, "POST", *etxRequestPath, *bodyRequest)
+	client := etxClient.NewClient(httpUrl+":"+httpPort, "GET", *etxRequestPath, *bodyRequest)
 
 	scopeResponse, err := client.GetPost()
 	if err != nil {
-		return nil, err
-	}
-	if scopeResponse.Code != 202 {
 		return nil, err
 	}
 
