@@ -20,11 +20,26 @@ var alignCmd = &cobra.Command{
 	
 	Examples: scopectl align --mode land
 	
-	Usage: scopectl align --mode [mode]`,
+	Usage: scopectl align --mode [mode]
+		   scopectl align --ack`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 
 		log.Println("align called")
+		ack, err := cmd.Flags().GetBool("ack")
+		if ack {
+			log.Println("acknowledging alignment")
+
+			scope_res, err := handlers.AckCommandHandler()
+			if err != nil {
+				fmt.Printf("error calling server API server: %s\n", err.Error())
+				return err
+			}
+			fmt.Printf("align ack command responded: %s\n", scope_res.Response)
+			return nil
+		}
+
 		mode, err := cmd.Flags().GetString("mode")
+
 		if err != nil {
 			fmt.Printf("error retrieving alignment mode: %s\n", err.Error())
 			return err
@@ -50,6 +65,8 @@ var alignCmd = &cobra.Command{
 func init() {
 
 	alignCmd.Flags().StringP("mode", "m", "", "align mode")
+	alignCmd.Flags().BoolP("ack", "a", false, "acknowldge alignment")
+
 	rootCmd.AddCommand(alignCmd)
 
 	// Here you will define your flags and configuration settings.
