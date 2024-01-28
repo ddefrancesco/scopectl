@@ -4,7 +4,6 @@ Copyright © 2023 Daniele De Francesco ddefrancesco@gmail.com
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"log"
 
@@ -21,11 +20,11 @@ var alignCmd = &cobra.Command{
 	Examples: scopectl align --mode land
 	
 	Usage: scopectl align --mode [mode]
-		   scopectl align --ack`,
+		   scopectl align --acknowledge`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 
 		log.Println("align called")
-		ack, err := cmd.Flags().GetBool("ack")
+		ack, err := cmd.Flags().GetBool("acknowledge")
 		if ack {
 			log.Println("acknowledging alignment")
 
@@ -44,9 +43,9 @@ var alignCmd = &cobra.Command{
 			fmt.Printf("error retrieving alignment mode: %s\n", err.Error())
 			return err
 		}
-		if mode == "" {
-			return errors.New("missing alignment mode")
-		}
+		// if mode == "" {
+		// 	return errors.New("missing alignment mode")
+		// }
 		log.Println("Mode Flag Value: " + mode)
 		pmap := make(map[string]string)
 
@@ -65,7 +64,7 @@ var alignCmd = &cobra.Command{
 func init() {
 
 	alignCmd.Flags().StringP("mode", "m", "", "align mode")
-	alignCmd.Flags().BoolP("ack", "a", false, "acknowldge alignment")
+	alignCmd.Flags().BoolP("acknowledge", "a", false, "acknowldge alignment")
 
 	rootCmd.AddCommand(alignCmd)
 

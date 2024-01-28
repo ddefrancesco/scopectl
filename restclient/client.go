@@ -1,3 +1,6 @@
+/*
+Copyright © 2023 Daniele De Francesco ddefrancesco@gmail.com
+*/
 package restclient
 
 import (
