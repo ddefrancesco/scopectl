@@ -103,11 +103,14 @@ func (c *EtxRestClient) encodeJSON(v interface{}) (io.Reader, error) {
 }
 
 func (c *EtxRestClient) Post() (*ScopeResponse, error) {
+	headersMap := make(map[string]string)
+	headersMap["Accept"] = "application/json"
+
 	body, err := c.encodeJSON(c.RequestBody)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.doRequest(nil, body)
+	resp, err := c.doRequest(headersMap, body)
 	if err != nil {
 		return nil, err
 	}
@@ -125,11 +128,10 @@ func (c *EtxRestClient) Post() (*ScopeResponse, error) {
 }
 
 func (c *EtxRestClient) Get() (*[]ScopeResponse, error) {
-	// body, err := c.encodeJSON(c.RequestBody)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	resp, err := c.doRequest(c.PathParams.Items, nil)
+
+	headersMap := make(map[string]string)
+	headersMap["Accept"] = "application/json"
+	resp, err := c.doRequest(headersMap, nil)
 	if err != nil {
 		return nil, err
 	}
