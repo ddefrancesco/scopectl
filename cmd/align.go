@@ -4,7 +4,6 @@ Copyright © 2023 Daniele De Francesco ddefrancesco@gmail.com
 package cmd
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/ddefrancesco/scopectl/handlers"
@@ -25,22 +24,29 @@ var alignCmd = &cobra.Command{
 
 		log.Println("align called")
 		ack, err := cmd.Flags().GetBool("acknowledge")
+		if err != nil {
+			return err
+		}
 		if ack {
 			log.Println("acknowledging alignment")
 
 			scope_res, err := handlers.AckCommandHandler()
 			if err != nil {
-				fmt.Printf("error calling server API server: %s\n", err.Error())
+				log.Printf("error calling server API server: %s\n", err.Error())
 				return err
 			}
-			fmt.Printf("align ack command responded: %s\n", scope_res.Response)
+			log.Println("align ack command responded:")
+			for _, v := range *scope_res {
+				log.Printf("%s\n", v.Response)
+			}
+
 			return nil
 		}
 
 		mode, err := cmd.Flags().GetString("mode")
 
 		if err != nil {
-			fmt.Printf("error retrieving alignment mode: %s\n", err.Error())
+			log.Printf("error retrieving alignment mode: %s\n", err.Error())
 			return err
 		}
 		// if mode == "" {
@@ -53,10 +59,10 @@ var alignCmd = &cobra.Command{
 
 		scope_res, err := handlers.AlignCommandHandler(pmap)
 		if err != nil {
-			fmt.Printf("error calling server API server: %s\n", err.Error())
+			log.Printf("error calling server API server: %s\n", err.Error())
 			return err
 		}
-		fmt.Printf("align command responded: %s\n", scope_res.Response)
+		log.Printf("align command responded: %s\n", scope_res.Response)
 		return nil
 	},
 }

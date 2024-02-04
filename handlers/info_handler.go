@@ -1,20 +1,21 @@
 /*
-Copyright © 2023 Daniele De Francesco ddefrancesco@gmail.com
+Copyright © 2024 Daniele De Francesco ddefrancesco@gmail.com
 */
 package handlers
 
 import (
+	"log"
+
 	etxClient "github.com/ddefrancesco/scopectl/restclient"
 	"github.com/spf13/viper"
 )
 
-func AckCommandHandler() (*[]etxClient.ScopeResponse, error) {
-
+func InfoCommandHandler(params map[string]string) (*[]etxClient.ScopeResponse, error) {
+	//TODO InfoCommandHandler
 	var etxRequestPath = &etxClient.RequestPath{
-		Command: "ack",
-		Items:   nil,
+		Command: "info",
+		Items:   params,
 	}
-
 	var bodyRequest = &etxClient.ScopeBodyRequest{
 		Body: "",
 	}
@@ -25,6 +26,12 @@ func AckCommandHandler() (*[]etxClient.ScopeResponse, error) {
 	scopeResponse, err := client.Get()
 	if err != nil {
 		return nil, err
+	}
+	for _, v := range *scopeResponse {
+		log.Printf("%s\n", v.Response)
+		if v.Code != 200 {
+			return nil, err
+		}
 	}
 
 	return scopeResponse, nil

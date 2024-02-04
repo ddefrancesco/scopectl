@@ -20,9 +20,9 @@ func AlignCommandHandler(pmap map[string]string) (*etxClient.ScopeResponse, erro
 	}
 	var httpUrl string = viper.GetString("environments.test.url")
 	var httpPort string = viper.GetString("environments.test.port")
-	client := etxClient.NewClient(httpUrl+":"+httpPort, "POST", *etxRequestPath, *bodyRequest)
+	client := etxClient.NewClient(httpUrl+":"+httpPort, "POST", etxRequestPath, bodyRequest)
 
-	scopeResponse, err := client.GetPost()
+	scopeResponse, err := client.Post()
 	if err != nil {
 		return nil, err
 	}

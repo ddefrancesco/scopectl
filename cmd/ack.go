@@ -4,7 +4,6 @@ Copyright © 2023 Daniele De Francesco ddefrancesco@gmail.com
 package cmd
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/ddefrancesco/scopectl/handlers"
@@ -26,10 +25,13 @@ var ackCmd = &cobra.Command{
 
 		scope_res, err := handlers.AckCommandHandler()
 		if err != nil {
-			fmt.Printf("error calling server API server: %s\n", err.Error())
+			log.Printf("error calling server API server: %s\n", err.Error())
 			return err
 		}
-		fmt.Printf("ack command responded: %s\n", scope_res.Response)
+		log.Println("align ack command responded:")
+		for _, v := range *scope_res {
+			log.Printf("%s\n", v.Response)
+		}
 		return nil
 	},
 }
