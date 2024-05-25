@@ -6,10 +6,23 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"os"
+	"text/template"
 
 	"github.com/ddefrancesco/scopectl/handlers"
 	"github.com/spf13/cobra"
 )
+
+const infoTemplate = `
+{{- if . -}}
+Telescope Information:
+{{- range . }}
+  {{.Response}}
+{{- end}}
+{{- else -}}
+No telescope information available.
+{{- end -}}
+`
 
 // alignCmd represents the align command
 var infoCmd = &cobra.Command{
@@ -38,8 +51,13 @@ var infoCmd = &cobra.Command{
 			return err
 		}
 		fmt.Println("info command responded:")
-		for _, v := range *scope_res {
-			fmt.Printf("%s\n", v.Response)
+		// Usage
+		t := template.Must(template.New("info").Parse(infoTemplate))
+
+		err = t.Execute(os.Stdout, scope_res)
+		if err != nil {
+			log.Printf("error executing template: %v", err)
+			return nil
 		}
 		return nil
 	},

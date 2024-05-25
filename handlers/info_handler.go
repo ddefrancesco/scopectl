@@ -17,7 +17,7 @@ func InfoCommandHandler(params map[string]string) (*[]etxClient.ScopeResponse, e
 		Items:   params,
 	}
 	var bodyRequest = &etxClient.ScopeBodyRequest{
-		Body: "",
+		Body: nil,
 	}
 	var httpUrl string = viper.GetString("environments.test.url")
 	var httpPort string = viper.GetString("environments.test.port")

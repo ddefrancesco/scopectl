@@ -12,8 +12,9 @@ import (
 	"net/http"
 )
 
+type BodyMap map[string]string
 type ScopeBodyRequest struct {
-	Body string `json:"body"`
+	Body BodyMap `json:"body"`
 }
 type ScopeResponse struct {
 	Code     int    `json:"code"`

@@ -16,7 +16,7 @@ func AlignCommandHandler(pmap map[string]string) (*etxClient.ScopeResponse, erro
 	}
 
 	var bodyRequest = &etxClient.ScopeBodyRequest{
-		Body: pmap["mode"],
+		Body: pmap,
 	}
 	var httpUrl string = viper.GetString("environments.test.url")
 	var httpPort string = viper.GetString("environments.test.port")
