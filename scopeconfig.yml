@@ -1,4 +1,8 @@
+environment: scope
 environments:
   test:
     url: http://localhost
+    port: 8000
+  scope:
+    url: http://192.168.1.195
     port: 8000

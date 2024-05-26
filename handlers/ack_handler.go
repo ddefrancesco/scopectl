@@ -18,8 +18,9 @@ func AckCommandHandler() (*[]etxClient.ScopeResponse, error) {
 	var bodyRequest = &etxClient.ScopeBodyRequest{
 		Body: nil,
 	}
-	var httpUrl string = viper.GetString("environments.test.url")
-	var httpPort string = viper.GetString("environments.test.port")
+	env := viper.GetString("environment")
+	var httpUrl string = viper.GetString("environments." + env + ".url")
+	var httpPort string = viper.GetString("environments." + env + ".port")
 	client := etxClient.NewClient(httpUrl+":"+httpPort, "GET", etxRequestPath, bodyRequest)
 
 	scopeResponse, err := client.Get()
