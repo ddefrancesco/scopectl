@@ -31,7 +31,7 @@ var initCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		log.Printf("Init command responded:ß %s\n", scope_res.Response)
+		log.Printf("Init command responded: %s\n", scope_res.Response)
 		return nil
 	},
 }

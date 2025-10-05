@@ -4,8 +4,6 @@ Copyright © 2024 Daniele De Francesco ddefrancesco@gmail.com
 package handlers
 
 import (
-	"log"
-
 	etxClient "github.com/ddefrancesco/scopectl/restclient"
 	"github.com/spf13/viper"
 )
@@ -29,7 +27,7 @@ func InfoCommandHandler(params map[string]string) (*[]etxClient.ScopeResponse, e
 		return nil, err
 	}
 	for _, v := range *scopeResponse {
-		log.Printf("%s\n", v.Response)
+		//log.Printf("%s\n", v.Response)
 		if v.Code != 200 {
 			return nil, err
 		}

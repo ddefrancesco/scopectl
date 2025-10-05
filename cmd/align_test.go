@@ -43,7 +43,7 @@ func TestAlignCommandAlignInvalid(t *testing.T) {
 }
 
 func TestAlignCommandAlignValid(t *testing.T) {
-	t.Skip()
+	//t.Skip()
 	err0 := configurations.InitConfig()
 	if err0 != nil {
 		panic(err0)

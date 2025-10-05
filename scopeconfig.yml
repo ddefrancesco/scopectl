@@ -1,4 +1,4 @@
-environment: scope
+environment: test
 environments:
   test:
     url: http://localhost

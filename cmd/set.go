@@ -56,7 +56,7 @@ var setCmd = &cobra.Command{
 			log.Printf("error calling server API server: %s\n", err.Error())
 			return err
 		}
-		log.Printf("set command responded:ß %s\n", scope_res.Response)
+		log.Printf("set command responded: %s\n", scope_res.Response)
 		return nil
 	},
 }
