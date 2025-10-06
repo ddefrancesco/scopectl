@@ -40,7 +40,7 @@ var gotoCmd = &cobra.Command{
 		pmap["ngc"], _ = cmd.Flags().GetString("ngc")
 		pmap["hip"], _ = cmd.Flags().GetString("hip")
 		pmap["goto"], _ = cmd.Flags().GetString("goto")
-		scope_res, err := handlers.GotoCommandHandler(pmap)
+	scope_res, err := gotoHandler(pmap)
 		if err != nil {
 			log.Printf("error calling server API server: %s\n", err.Error())
 			return err
@@ -49,6 +49,9 @@ var gotoCmd = &cobra.Command{
 		return nil
 	},
 }
+
+// gotoHandler is a package-level variable so tests can replace it.
+var gotoHandler = handlers.GotoCommandHandler
 
 func init() {
 
