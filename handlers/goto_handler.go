@@ -4,23 +4,26 @@ Copyright © 2023 Daniele De Francesco ddefrancesco@gmail.com
 package handlers
 
 import (
+	"github.com/ddefrancesco/scopectl/handlers/commons"
 	etxClient "github.com/ddefrancesco/scopectl/restclient"
 	"github.com/spf13/viper"
 )
 
-func AlignCommandHandler(pmap map[string]string) (*etxClient.ScopeResponse, error) {
-
+// GotoCommandHandler handles the "goto" command logic.
+// It builds the request body and sends it to the server using the REST client.
+func GotoCommandHandler(pmap map[string]string) (*etxClient.ScopeResponse, error) {
+	bodyMap := commons.ToScopeBodyMap(pmap)
 	var etxRequestPath = &etxClient.RequestPath{
-		Command: "align",
-		Items:   pmap,
+		Command: "move",
+		Items:   bodyMap,
 	}
 
 	var bodyRequest = &etxClient.ScopeBodyRequest{
-		Body: pmap,
+		Body: bodyMap,
 	}
 	env := viper.GetString("environment")
-	var httpUrl string = viper.GetString("environments." + env + ".url")
-	var httpPort string = viper.GetString("environments." + env + ".port")
+	httpUrl := viper.GetString("environments." + env + ".url")
+	httpPort := viper.GetString("environments." + env + ".port")
 	client := etxClient.NewClient(httpUrl+":"+httpPort, "POST", etxRequestPath, bodyRequest)
 
 	scopeResponse, err := client.Post()

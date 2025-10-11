@@ -1,5 +1,5 @@
 /*
-Copyright © 2023 Daniele De Francesco ddefrancesco@gmail.com
+Copyright © 2024 Daniele De Francesco ddefrancesco@gmail.com
 */
 package handlers
 
@@ -8,27 +8,29 @@ import (
 	"github.com/spf13/viper"
 )
 
-func AlignCommandHandler(pmap map[string]string) (*etxClient.ScopeResponse, error) {
-
+func InfoCommandHandler(params map[string]string) (*[]etxClient.ScopeResponse, error) {
+	//TODO InfoCommandHandler
 	var etxRequestPath = &etxClient.RequestPath{
-		Command: "align",
-		Items:   pmap,
+		Command: "info",
+		Items:   params,
 	}
-
 	var bodyRequest = &etxClient.ScopeBodyRequest{
-		Body: pmap,
+		Body: nil,
 	}
 	env := viper.GetString("environment")
 	var httpUrl string = viper.GetString("environments." + env + ".url")
 	var httpPort string = viper.GetString("environments." + env + ".port")
-	client := etxClient.NewClient(httpUrl+":"+httpPort, "POST", etxRequestPath, bodyRequest)
+	client := etxClient.NewClient(httpUrl+":"+httpPort, "GET", etxRequestPath, bodyRequest)
 
-	scopeResponse, err := client.Post()
+	scopeResponse, err := client.Get()
 	if err != nil {
 		return nil, err
 	}
-	if scopeResponse.Code != 202 {
-		return nil, err
+	for _, v := range *scopeResponse {
+		//log.Printf("%s\n", v.Response)
+		if v.Code != 200 {
+			return nil, err
+		}
 	}
 
 	return scopeResponse, nil

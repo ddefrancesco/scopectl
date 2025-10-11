@@ -4,8 +4,6 @@ Copyright © 2023 Daniele De Francesco ddefrancesco@gmail.com
 package cmd
 
 import (
-	"errors"
-	"fmt"
 	"log"
 
 	"github.com/ddefrancesco/scopectl/handlers"
@@ -20,18 +18,40 @@ var alignCmd = &cobra.Command{
 	
 	Examples: scopectl align --mode land
 	
-	Usage: scopectl align --mode [mode]`,
+	Usage: scopectl align --mode [mode]
+		   scopectl align --acknowledge`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 
 		log.Println("align called")
-		mode, err := cmd.Flags().GetString("mode")
+		ack, err := cmd.Flags().GetBool("acknowledge")
 		if err != nil {
-			fmt.Printf("error retrieving alignment mode: %s\n", err.Error())
 			return err
 		}
-		if mode == "" {
-			return errors.New("missing alignment mode")
+		if ack {
+			log.Println("acknowledging alignment")
+
+			scope_res, err := handlers.AckCommandHandler()
+			if err != nil {
+				log.Printf("error calling server API server: %s\n", err.Error())
+				return err
+			}
+			log.Println("align ack command responded:")
+			for _, v := range *scope_res {
+				log.Printf("%s\n", v.Response)
+			}
+
+			return nil
 		}
+
+		mode, err := cmd.Flags().GetString("mode")
+
+		if err != nil {
+			log.Printf("error retrieving alignment mode: %s\n", err.Error())
+			return err
+		}
+		// if mode == "" {
+		// 	return errors.New("missing alignment mode")
+		// }
 		log.Println("Mode Flag Value: " + mode)
 		pmap := make(map[string]string)
 
@@ -39,10 +59,10 @@ var alignCmd = &cobra.Command{
 
 		scope_res, err := handlers.AlignCommandHandler(pmap)
 		if err != nil {
-			fmt.Printf("error calling server API server: %s\n", err.Error())
+			log.Printf("error calling server API server: %s\n", err.Error())
 			return err
 		}
-		fmt.Printf("align command responded: %s\n", scope_res.Response)
+		log.Printf("align command responded: %s\n", scope_res.Response)
 		return nil
 	},
 }
@@ -50,6 +70,8 @@ var alignCmd = &cobra.Command{
 func init() {
 
 	alignCmd.Flags().StringP("mode", "m", "", "align mode")
+	alignCmd.Flags().BoolP("acknowledge", "a", false, "acknowldge alignment")
+
 	rootCmd.AddCommand(alignCmd)
 
 	// Here you will define your flags and configuration settings.

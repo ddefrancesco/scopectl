@@ -4,19 +4,21 @@ Copyright © 2023 Daniele De Francesco ddefrancesco@gmail.com
 package handlers
 
 import (
+	"github.com/ddefrancesco/scopectl/handlers/commons"
 	etxClient "github.com/ddefrancesco/scopectl/restclient"
 	"github.com/spf13/viper"
 )
 
-func AlignCommandHandler(pmap map[string]string) (*etxClient.ScopeResponse, error) {
+func InitCommandHandler(pmap map[string]string) (*etxClient.ScopeResponse, error) {
 
+	bodyMap := commons.ToScopeBodyMap(pmap)
 	var etxRequestPath = &etxClient.RequestPath{
-		Command: "align",
-		Items:   pmap,
+		Command: "init",
+		Items:   bodyMap,
 	}
 
 	var bodyRequest = &etxClient.ScopeBodyRequest{
-		Body: pmap,
+		Body: bodyMap,
 	}
 	env := viper.GetString("environment")
 	var httpUrl string = viper.GetString("environments." + env + ".url")
